@@ -24,7 +24,7 @@ module.exports.removeCard = (req, res) => {
   Card.findById({ _id: req.params.cardId })
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Карточка не найдена' });
+        handleException({ name: 'NotFound' }, req, res);
       } else {
         card.deleteOne().then(() => res.send({ message: 'Пост удалён' }));
       }
@@ -41,9 +41,10 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   .populate('likes')
   .then((cards) => {
     if (!cards) {
-      res.status(404).send({ message: 'Карточка не найдена' });
+      handleException({ name: 'NotFound' }, req, res);
+    } else {
+      res.send(cards);
     }
-    res.send(cards);
   })
   .catch((err) => handleException(err, req, res));
 
@@ -56,8 +57,9 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   .populate('likes')
   .then((cards) => {
     if (!cards) {
-      res.status(404).send({ message: 'Карточка не найдена' });
+      handleException({ name: 'NotFound' }, req, res);
+    } else {
+      res.send(cards);
     }
-    res.send(cards);
   })
   .catch((err) => handleException(err, req, res));
