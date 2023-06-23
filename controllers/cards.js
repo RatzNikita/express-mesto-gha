@@ -30,7 +30,7 @@ module.exports.removeCard = (req, res) => {
 module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $addToSet: { likes: req.user._id } },
-  { new: true },
+  { new: true, runValidators: true },
 )
   .populate('owner')
   .populate('likes')
@@ -40,7 +40,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } },
-  { new: true },
+  { new: true, runValidators: true },
 )
   .populate('owner')
   .populate('likes')
