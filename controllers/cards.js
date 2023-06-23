@@ -21,9 +21,14 @@ module.exports.getCards = (req, res) => {
 };
 
 module.exports.removeCard = (req, res) => {
-  const { cardId } = req.params;
-  Card.deleteOne({ id: cardId })
-    .then(() => res.send({ message: 'Пост удалён' }))
+  Card.findById({ _id: req.params.cardId })
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Карточка не найдена' });
+      } else {
+        card.deleteOne().then(() => res.send({ message: 'Пост удалён' }));
+      }
+    })
     .catch((err) => handleException(err, req, res));
 };
 
@@ -34,7 +39,12 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .populate('owner')
   .populate('likes')
-  .then((cards) => res.send(cards))
+  .then((cards) => {
+    if (!cards) {
+      res.status(404).send({ message: 'Карточка не найдена' });
+    }
+    res.send(cards);
+  })
   .catch((err) => handleException(err, req, res));
 
 module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
@@ -44,5 +54,10 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
 )
   .populate('owner')
   .populate('likes')
-  .then((cards) => res.send(cards))
+  .then((cards) => {
+    if (!cards) {
+      res.status(404).send({ message: 'Карточка не найдена' });
+    }
+    res.send(cards);
+  })
   .catch((err) => handleException(err, req, res));
