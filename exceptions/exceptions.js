@@ -1,6 +1,8 @@
 const BAD_REQUEST = 400;
 const NOT_FOUND = 404;
 const INTERNAL_ERROR = 500;
+const CONFLICT = 409;
+const UNAUTHORIZED = 401;
 
 module.exports.handleException = (err, req, res) => {
   if (err.name === 'ValidationError') {
@@ -19,6 +21,14 @@ module.exports.handleException = (err, req, res) => {
     }
     return;
   }
+  if (err.code === 11000) {
+    res.status(CONFLICT).send({ message: 'Указанная почта уже используется' });
+    return;
+  }
+  if (err.name === 'InvalidToken') {
+    res.status(UNAUTHORIZED).send({ message: 'Вы не авторизованы' });
+  }
+
   res.status(INTERNAL_ERROR).send({ message: 'Внутренняя ошибка сервера' });
 };
 
