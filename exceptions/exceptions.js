@@ -3,6 +3,7 @@ const NOT_FOUND = 404;
 const INTERNAL_ERROR = 500;
 const CONFLICT = 409;
 const UNAUTHORIZED = 401;
+const FORBIDDEN = 403;
 
 module.exports.handleException = (err, req, res) => {
   if (err.name === 'ValidationError') {
@@ -29,7 +30,10 @@ module.exports.handleException = (err, req, res) => {
     res.status(UNAUTHORIZED).send({ message: 'Вы не авторизованы' });
   }
   if (err.message === 'Неправильные почта или пароль') {
-    res.status(401).send({ message: err.message });
+    res.status(UNAUTHORIZED).send({ message: err.message });
+  }
+  if (err.name === 'NotPermissions') {
+    res.status(FORBIDDEN).send({ message: 'Вы не можете удалить чужую карточку' });
   }
   res.status(INTERNAL_ERROR).send({ message: 'Внутренняя ошибка сервера' });
 };

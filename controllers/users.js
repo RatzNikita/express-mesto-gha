@@ -66,14 +66,9 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.getUserInfo = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.user._id).select('+email')
     .then((user) => {
-      const {
-        about, avatar, name, _id,
-      } = user;
-      res.send({
-        about, avatar, name, _id,
-      });
+      res.send(user);
     })
     .catch(next);
 };

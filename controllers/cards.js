@@ -23,8 +23,10 @@ module.exports.removeCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         handleException({ name: 'NotFound' }, req, res);
-      } else {
+      } else if (card.owner.equals(req.user._id)) {
         card.deleteOne().then(() => res.send({ message: 'Пост удалён' }));
+      } else {
+        handleException({ name: 'NotPermissions' }, req, res);
       }
     })
     .catch(next);
