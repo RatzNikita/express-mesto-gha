@@ -3,18 +3,27 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const { errors } = require('celebrate');
+const rateLimit = require('express-rate-limit');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { handleException } = require('./exceptions/exceptions');
 const { createUserValidation, loginValidation } = require('./validation/celebrateShemas');
 
+mongoose.connect('mongodb://localhost:27017/mestodb');
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // за 15 минут
+  max: 250,
+});
+
 const app = express();
+app.use(helmet);
+app.use(limiter);
 app.use(cookieParser);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use('/signin', loginValidation, login);
 app.use('/signup', createUserValidation, createUser);

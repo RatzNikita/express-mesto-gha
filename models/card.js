@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { emailRegex } = require('../validation/validationConstants');
+const { urlRegex } = require('../validation/validationConstants');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -13,7 +13,7 @@ const cardSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return emailRegex.test(v); //eslint-disable-line
+        return urlRegex.test(v); //eslint-disable-line
       },
       message: (props) => `${props.value} некорректная ссылка!`,
     },

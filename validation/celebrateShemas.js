@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { celebrate, Joi } = require('celebrate');
-const { emailRegex } = require('./validationConstants');
+const { urlRegex } = require('./validationConstants');
 
 const cardIdValidation = celebrate({
   params: Joi.object().keys({
@@ -13,8 +13,10 @@ const cardIdValidation = celebrate({
 });
 
 const postCardValidation = celebrate({
-  name: Joi.string().required().min(2).max(30),
-  link: Joi.string().required().regex(emailRegex),
+  body: {
+    name: Joi.string().required().min(2).max(30),
+    link: Joi.string().required().pattern(urlRegex),
+  },
 });
 
 const updateProfileValidation = celebrate({
@@ -26,7 +28,7 @@ const updateProfileValidation = celebrate({
 
 const updateAvatarValidation = celebrate({
   body: {
-    avatar: Joi.string().required().regex(emailRegex),
+    avatar: Joi.string().required().regex(urlRegex),
   },
 });
 
@@ -34,7 +36,7 @@ const createUserValidation = celebrate({
   body: {
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(emailRegex),
+    avatar: Joi.string().regex(urlRegex),
     email: Joi.string().email().required(),
     password: Joi.string().required().min(2).max(30),
   },
