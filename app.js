@@ -19,7 +19,7 @@ const limiter = rateLimit({
 });
 
 const app = express();
-app.use(helmet);
+app.use(helmet());
 app.use(limiter);
 app.use(cookieParser);
 app.use(bodyParser.json());
