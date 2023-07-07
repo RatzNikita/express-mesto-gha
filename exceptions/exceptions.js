@@ -28,7 +28,9 @@ module.exports.handleException = (err, req, res) => {
   if (err.name === 'InvalidToken') {
     res.status(UNAUTHORIZED).send({ message: 'Вы не авторизованы' });
   }
-
+  if (err.message === 'Неправильные почта или пароль') {
+    res.status(404).send({ message: err.message });
+  }
   res.status(INTERNAL_ERROR).send({ message: 'Внутренняя ошибка сервера' });
 };
 

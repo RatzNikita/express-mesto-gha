@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { handleException } = require('../exceptions/exceptions');
 
@@ -22,11 +23,14 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  User.create({
-    name, about, avatar, email, password,
-  })
-    .then((user) => res.send(user))
-    .catch(next);
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      User.create({
+        name, about, avatar, email, password: hash,
+      })
+        .then((user) => res.send(user))
+        .catch(next);
+    });
 };
 
 module.exports.updateProfile = (req, res, next) => {
@@ -56,7 +60,7 @@ module.exports.login = (req, res, next) => {
           httpOnly: true,
           sameSite: true,
         })
-        .end();
+        .send({ message: 'Вы успешно авторизовались' });
     })
     .catch(next);
 };

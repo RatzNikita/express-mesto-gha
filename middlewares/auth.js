@@ -12,12 +12,10 @@ module.exports = (req, res, next) => {
   const token = extractBearerToken(authorization);
   let payload;
   try {
-    payload = jwt.verify(token, 'super-strong-secret');
+    payload = jwt.verify(token, 'secret');
   } catch (err) {
     next(err);
   }
-
   req.user = payload;
-
   return next();
 };
