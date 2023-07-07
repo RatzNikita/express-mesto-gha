@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const bcrypt = require('bcryptjs');
 const validator = require('validator/es');
+const { emailRegex } = require('../validation/validationConstants');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -44,7 +45,7 @@ const userSchema = new mongoose.Schema({
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator(v) {
-        return /https?:\/\/(www)?[0-9a-zA-Z-._~:/?#\[\]@!\$&'\(\)\*\+,;=]+\.\w{2,3}/.test(v);
+        return emailRegex.test(v); //eslint-disable-line
       },
       message: (props) => `${props.value} некорректная ссылка!`,
     },
