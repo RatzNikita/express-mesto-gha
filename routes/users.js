@@ -3,11 +3,11 @@ const router = require('express').Router();
 const {
   getUsers, getUser, updateAvatar, updateProfile, getUserInfo,
 } = require('../controllers/users');
-const { updateProfileValidation, updateAvatarValidation } = require('../validation/celebrateShemas');
+const { updateProfileValidation, updateAvatarValidation, userIdValidation } = require('../validation/celebrateShemas');
 
 router.get('', getUsers);
-router.get('/:userId', getUser);
 router.get('/me', getUserInfo);
+router.get('/:userId', userIdValidation, getUser);
 router.patch('/me', updateProfileValidation, updateProfile);
 router.patch('/me/avatar', updateAvatarValidation, updateAvatar);
 

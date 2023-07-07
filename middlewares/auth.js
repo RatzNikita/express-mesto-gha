@@ -2,14 +2,12 @@
 const jwt = require('jsonwebtoken');
 const { handleException } = require('../exceptions/exceptions');
 
-const extractBearerToken = (header) => header.replace('Bearer ', '');
-
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
     handleException({ name: 'InvalidToken' }, req, res);
   }
-  const token = extractBearerToken(authorization);
+  const token = authorization.replace('Bearer ', '');
   let payload;
   try {
     payload = jwt.verify(token, 'secret');
@@ -17,5 +15,5 @@ module.exports = (req, res, next) => {
     next(err);
   }
   req.user = payload;
-  return next();
+  next();
 };

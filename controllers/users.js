@@ -28,14 +28,20 @@ module.exports.createUser = (req, res, next) => {
       User.create({
         name, about, avatar, email, password: hash,
       })
-        .then((user) => res.send(user))
+        .then((user) => res.status(201).send({
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        }))
         .catch(next);
     });
 };
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user, { name, about }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       res.send(user);
     })
@@ -44,7 +50,7 @@ module.exports.updateProfile = (req, res, next) => {
 
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user, { avatar }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => res.send(user))
     .catch(next);
 };
@@ -65,13 +71,15 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.getUserInfo = (req, res, next) => User.findById({ _id: req.user })
-  .then((user) => {
-    const {
-      about, avatar, name, _id,
-    } = user;
-    res.send({
-      about, avatar, name, _id,
-    });
-  })
-  .catch(next);
+module.exports.getUserInfo = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      const {
+        about, avatar, name, _id,
+      } = user;
+      res.send({
+        about, avatar, name, _id,
+      });
+    })
+    .catch(next);
+};

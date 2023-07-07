@@ -29,7 +29,7 @@ module.exports.handleException = (err, req, res) => {
     res.status(UNAUTHORIZED).send({ message: 'Вы не авторизованы' });
   }
   if (err.message === 'Неправильные почта или пароль') {
-    res.status(404).send({ message: err.message });
+    res.status(401).send({ message: err.message });
   }
   res.status(INTERNAL_ERROR).send({ message: 'Внутренняя ошибка сервера' });
 };
