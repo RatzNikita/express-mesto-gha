@@ -6,6 +6,10 @@ const UNAUTHORIZED = 401;
 const FORBIDDEN = 403;
 
 module.exports.handleException = (err, req, res) => {
+  if (err.name === 'PageNotFound') {
+    res.status(404).send({ message: 'Страница с указанным адресом не найдена' });
+    return;
+  }
   if (err.name === 'ValidationError') {
     res.status(BAD_REQUEST).send({ message: 'Введённые данные некорректны' });
     return;
@@ -28,12 +32,15 @@ module.exports.handleException = (err, req, res) => {
   }
   if (err.name === 'InvalidToken') {
     res.status(UNAUTHORIZED).send({ message: 'Вы не авторизованы' });
+    return;
   }
   if (err.message === 'Неправильные почта или пароль') {
     res.status(UNAUTHORIZED).send({ message: err.message });
+    return;
   }
   if (err.name === 'NotPermissions') {
     res.status(FORBIDDEN).send({ message: 'Вы не можете удалить чужую карточку' });
+    return;
   }
   res.status(INTERNAL_ERROR).send({ message: 'Внутренняя ошибка сервера' });
 };

@@ -5,10 +5,9 @@ const { urlRegex } = require('./validationConstants');
 const cardIdValidation = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string()
-      .required()
-      .alphanum()
-      .min(24)
-      .max(24),
+      .length(24)
+      .hex()
+      .required(),
   }),
 });
 
@@ -51,7 +50,10 @@ const loginValidation = celebrate({
 
 const userIdValidation = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24).required(),
+    userId: Joi.string()
+      .length(24)
+      .hex()
+      .required(),
   }),
 });
 

@@ -3,7 +3,7 @@ const router = require('express').Router();
 const {
   createCard, dislikeCard, getCards, likeCard, removeCard,
 } = require('../controllers/cards');
-const { cardIdValidation, postCardValidation } = require('../validation/celebrateShemas');
+const { cardIdValidation, postCardValidation } = require('../validation/celebrateSchemas');
 
 router.get('', getCards);
 router.post('', postCardValidation, createCard);
